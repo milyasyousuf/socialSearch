@@ -43,8 +43,8 @@ input[type=text]:focus {
 
 }
 .Results-twitter{
-    margin-top: 10%;
-    margin-left: 20px;
+    margin-top: 13%;
+    margin-left: 5%;
     overflow: hidden;
     background-color: cornflowerblue;
     color:white;
@@ -68,8 +68,8 @@ input[type=text]:focus {
     padding-left: 5px;
 }
 .Results-Youtube{
-    margin-top: 10%;
-    margin-left: 30%;
+    margin-top: 13%;
+    margin-left: 33%;
     overflow: hidden;
     background-color: firebrick;
     color:white;
@@ -80,8 +80,8 @@ input[type=text]:focus {
     top: 0px;
 }
 .Results-Facebook{
-    margin-top: 10%;
-    margin-left: 58.5%;
+    margin-top: 13%;
+    margin-left: 61%;
     overflow: hidden;
     background-color: #3b5998;
     color:white;
@@ -90,4 +90,13 @@ input[type=text]:focus {
     position: absolute;
     left: 0px;
     top: 0px;
+}
+.results{
+
+}
+.tablesV1{
+    margin-top:20px;
+    margin-left:10%;
+    width:40%;
+
 }

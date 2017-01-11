@@ -7,19 +7,20 @@ from tweepy import OAuthHandler
 from textblob import TextBlob
 import databaseFunction as d
 import config as c
-
+from sentimentModule import Sentiments
 
 cc = d.sqlConnection()
 cur = cc.cursor()
+senti = Sentiments()
 
 
-def createLists(text, created_at, lang, user, userid,qt):
-    # print data.user.id
+def createLists(text, created_at, lang, user, userid,hashtag,tag,score):
+    table= ["twitterSearch",""]
     cur.execute(
-        'INSERT INTO twitterSearch(tweet,create_at,tweetLang,tweetUser,tweetUserId,queryTime)  VALUES (%s,%s,%s,%s,%s,%s)',
-        (text.encode('utf-8'), created_at, lang, user.encode('utf-8'), userid, qt))
+            'INSERT INTO twitterSearch(tweet,create_at,tweetLang,tweetUser,tweetUserId,hashtag,tag,score)  VALUES '
+                '(%s,%s,%s,%s,%s,%s,%s,%s)',
+            (text.encode('utf-8'), created_at, lang, user.encode('utf-8'), userid,hashtag,tag,score))
     cc.commit()
-    print "call lists"
 
 class TwitterClient(object):
     '''
@@ -66,44 +67,51 @@ class TwitterClient(object):
         else:
             return 'negative'
 
+    def getSentiment(self,text):
+        tokens = senti.tokenizeString(text)
+        taggedWords = senti.posTagTokens(tokens)  # Tagging the tokens
+        taggedWords = senti.posTagWords(taggedWords)  # Shortening the tags
+        score = senti.getScore(taggedWords)
+        tag = senti.getTag(score)
+        return tag,score
 
-
-    def get_tweets(self):
+    def get_tweets(self,counter):
         tweets = []
-
+        query=self.clean_tweet(self.query)
+        print query
         try:
-            recd_tweets = self.api.search(q=self.query,
-                                          count=self.tweet_count_max)
+            recd_tweets = self.api.search(q=query,
+                                        count=counter)
             if not recd_tweets:
                 pass
+
             for data in recd_tweets:
-                parsed_tweet = {}
+                    parsed_tweet = {}
 
-                #parsed_tweet['text'] = tweet.text
-                #parsed_tweet['user'] = tweet.user.screen_name
-                test= self.query
-                #print tweet.user.id
-                tweet = self.clean_tweet(data.text)
+                    #parsed_tweet['text'] = tweet.text
+                    #parsed_tweet['user'] = tweet.user.screen_name
+                    test= self.query
+                    #print tweet.user.id
+                    tweet = self.clean_tweet(data.text)
+                    tag,score = self.getSentiment(tweet)
 
-                createLists(tweet,data.created_at,data.lang,data.user.screen_name,data.user.id,test)
-                #print json.dumps(tweet,indent=5)
+                    createLists(tweet,data.created_at,data.lang,data.user.screen_name,data.user.id,test,tag,score)
+                    #print json.dumps(tweet,indent=5)
 
-                #if self.with_sentiment == 1:
-                 #   parsed_tweet['sentiment'] = self.get_tweet_sentiment(tweet.text)
-                #else:
-                 #   parsed_tweet['sentiment'] = 'unavailable'
+                    #if self.with_sentiment == 1:
+                     #   parsed_tweet['sentiment'] = self.get_tweet_sentiment(tweet.text)
+                    #else:
+                     #   parsed_tweet['sentiment'] = 'unavailable'
 
-                #if tweet.retweet_count > 0 and self.retweets_only == 1:
-                #    if parsed_tweet not in tweets:
-                 #       tweets.append(parsed_tweet)
-                #elif not self.retweets_only:
-                 #   if parsed_tweet not in tweets:
-                  #      tweets.append(parsed_tweet)
-
-            return tweets
-
+                    #if tweet.retweet_count > 0 and self.retweets_only == 1:
+                    #    if parsed_tweet not in tweets:
+                     #       tweets.append(parsed_tweet)
+                    #elif not self.retweets_only:
+                     #   if parsed_tweet not in tweets:
+                      #      tweets.append(parsed_tweet)
         except tweepy.TweepError as e:
             print("Error : " + str(e))
+        return query
 
 
 

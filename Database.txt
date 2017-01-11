@@ -1,0 +1,72 @@
+twitterTrends
+youtube search
+twitter Search
+
+----------------
+Youtube trends |
+----------------
+| id            - PK varchar
+| title          varchar
+| publishedTime varchar
+| commentsCounts int 
+| user varchar
+| ViewCount int
+
+
+------------------
+facebook pages
+------------------
+pageId - PK varchar 
+----------------
+facebook posts
+----------------
+PostId - PK varchar
+facebookPageId - FK varchar
+
+------------------
+facebook comments
+------------------
+|same tables as I given in comments table just add
+| postId - FK varchar
+| commnetID -PK varchar
+
+---------------------
+YoutubeSearch video | 
+---------------------
++---------------+--------------+------+-----+---------+----------------+
+| Field         | Type         | Null | Key | Default | Extra          |
++---------------+--------------+------+-----+---------+----------------+
+| id            | int(100)     | NO   | PRI | NULL    | auto_increment |
+| videoIds      | varchar(100) | YES  |     | NULL    |                |
+| title         | varchar(500) | YES  |     | NULL    |                |
+| viewCount     | double       | YES  |     | NULL    |                |
+| likeCount     | double       | YES  |     | NULL    |                |
+| dislikeCount  | double       | YES  |     | NULL    |                |
+| favoriteCount | double       | YES  |     | NULL    |                |
+| commentCount  | double       | YES  |     | NULL    |                |
+| publishedTime | varchar(40)  | YES  |     | NULL    |                |
++---------------+--------------+------+-----+---------+----------------+
+
+----------------
+twitter Search
+----------------
+| id          int-PK
+| tweet      varchar
+| create_at   varchar
+| tweetLang   varchar
+| tweetUser   varchar
+| tweetUserId varchar
+| queryTime	varchar
+| sentimentValue varchar
+| sentiment	varchar
+---------------------
+YoutubeSearchComments
+---------------------
+| id            - PK int
+| youtubeVideoIds  - FK  varchar
+| title          varchar
+| publishedTime varchar
+| comments-varchar
+| user-varchar
+| sentimentValue varchar
+| sentiment	varchar

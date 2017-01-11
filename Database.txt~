@@ -1,0 +1,72 @@
+twitterTrends
+youtube search
+twitter Search
+
+----------------
+Youtube trends |
+----------------
+| id            - PK
+| title          
+| publishedTime 
+| commentsCounts
+| user
+| ViewCount
+
+
+------------------
+facebook pages
+------------------
+pageId - PK
+----------------
+facebook posts
+----------------
+PostId - PK
+facebookPageId - FK
+
+------------------
+facebook comments
+------------------
+|same tables as I given in comments table just add
+| postId - FK
+| commnetID -PK
+
+---------------------
+YoutubeSearch video | 
+---------------------
++---------------+--------------+------+-----+---------+----------------+
+| Field         | Type         | Null | Key | Default | Extra          |
++---------------+--------------+------+-----+---------+----------------+
+| id            | int(100)     | NO   | PRI | NULL    | auto_increment |
+| videoIds      | varchar(100) | YES  |     | NULL    |                |
+| title         | varchar(500) | YES  |     | NULL    |                |
+| viewCount     | double       | YES  |     | NULL    |                |
+| likeCount     | double       | YES  |     | NULL    |                |
+| dislikeCount  | double       | YES  |     | NULL    |                |
+| favoriteCount | double       | YES  |     | NULL    |                |
+| commentCount  | double       | YES  |     | NULL    |                |
+| publishedTime | varchar(40)  | YES  |     | NULL    |                |
++---------------+--------------+------+-----+---------+----------------+
+
+----------------
+twitter Search
+----------------
+| id          -PK
+| tweet      
+| create_at   
+| tweetLang   
+| tweetUser   
+| tweetUserId 
+| queryTime
+| sentimentValue
+| sentiment
+---------------------
+YoutubeSearchComments
+---------------------
+| id            - PK
+| youtubeVideoIds  - FK  
+| title          
+| publishedTime 
+| comments
+| user
+| Sentiments
+

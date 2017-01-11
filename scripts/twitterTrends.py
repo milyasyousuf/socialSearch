@@ -1,11 +1,11 @@
-#!/usr/bin/python
-# -*- coding: utf-8 -*-
+
 import tweepy
-import MySQLdb
+import re
 import pandas as pd
 import config as c
 import databaseFunction as d
 import inputData as i
+from temp import TwitterClient
 
 #global lists
 df = pd.DataFrame()
@@ -17,6 +17,9 @@ trendnames = []
 tweet_volumes = []
 
 
+def clean_tweet(tweet):
+    return ' '.join(re.sub("(@[A-Za-z0-9]+)|([^0-9A-Za-z \t])|(\w+:\/\/\S+)", " ", tweet).split())
+
 def createLists(location, woeid, created_at, trendStart, trendname, tweet_volume):
     locations.append(location)
     woeids.append(woeid)
@@ -27,7 +30,7 @@ def createLists(location, woeid, created_at, trendStart, trendname, tweet_volume
 
 
 def createDF(count):
-    twitterTrends(i.woeidList)
+
     df['location'] = locations
     df['woeid'] = woeids
     df['created_at'] = created_ats
@@ -37,11 +40,13 @@ def createDF(count):
     #print df.sort(['tweet_volume'], ascending=False).groupby(['location']).head(count)
     print "Twitter Trends Calls"
 
-def testing(counter):
-    createDF(counter)
-    return df
+def testing(now):
+    twitterTrends(i.woeidList,now)
+    print "TwitterTrends Downloads complete"
+    #createDF(counter)
+    #return df
 
-def twitterTrends(woeidList):
+def twitterTrends(woeidList,now):
     # OAuth process, using the keys and tokens
     auth = tweepy.OAuthHandler(c.consumer_key, c.consumer_secret)
     auth.set_access_token(c.access_token, c.access_token_secret)
@@ -68,13 +73,12 @@ def twitterTrends(woeidList):
                 #print created_at
                 for trendData in trendsList:
                     trendname = trendData["name"].encode('utf-8')
+                    trendname=clean_tweet(trendname)
                     tweet_volume = trendData["tweet_volume"]
                     url = trendData["url"]
                     # print trendname                                   s
-                    print tweet_volume
-
-                    cur.execute('INSERT INTO twitterTrends(location,woeid,created_at,trendStart,trendname,tweet_volume)  VALUES (%s,%s,%s,%s,%s,%s)',
-                               (locationData, i, created_at, trendStart, trendname, tweet_volume))
+                    cur.execute('INSERT INTO twitterTrends(location,woeid,created_at,trendStart,trendname,tweet_volume,timeNow)  VALUES (%s,%s,%s,%s,%s,%s,%s)',
+                               (locationData, i, created_at, trendStart, trendname, tweet_volume,now))
                     cc.commit()
                     createLists(locationData, i, created_at, trendStart, trendname, str(tweet_volume))
         break
